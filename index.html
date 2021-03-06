@@ -11,6 +11,8 @@
     Fore more details:
     * https://developer.mozilla.org/en-US/docs/Web/HTML/Element/base
   -->
+  <!-- ! I have to disable base ref for github pages to render correctly :/
+    cf. https://stackoverflow.com/a/64708825/12421326 -->
   <!-- <base href="/"> -->
 
   <meta charset="UTF-8">
@@ -60,7 +62,7 @@
   <script>
     if ('serviceWorker' in navigator) {
       window.addEventListener('flutter-first-frame', function () {
-        navigator.serviceWorker.register('flutter_service_worker.js?v=1030371259');
+        navigator.serviceWorker.register('flutter_service_worker.js?v=4043560440');
       });
     }
   </script>

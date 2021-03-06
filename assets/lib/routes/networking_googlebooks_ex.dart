@@ -26,26 +26,25 @@ class _RestApiGoogleBooksExampleState extends State<RestApiGoogleBooksExample> {
   Widget build(BuildContext context) {
     return Column(
       children: <Widget>[
-        Divider(),
+        const Divider(),
         TextField(
           controller: this._queryController,
-          decoration: InputDecoration(
+          decoration: const InputDecoration(
             labelText: 'Title',
             border: OutlineInputBorder(),
           ),
         ),
-        SizedBox(height: 4),
+        const SizedBox(height: 4),
         ButtonBar(
           children: <Widget>[
-            RaisedButton(
-              child: Text('Search'),
-              onPressed: _pending
-                  ? null
-                  : () => this._search(_queryController.text),
+            ElevatedButton(
+              onPressed:
+                  _pending ? null : () => this._search(_queryController.text),
+              child: const Text('Search'),
             ),
           ],
         ),
-        if (this._books.length > 0)
+        if (this._books.isNotEmpty)
           Expanded(
             child: ListView.builder(
               itemCount: this._books.length,
@@ -73,7 +72,7 @@ class _RestApiGoogleBooksExampleState extends State<RestApiGoogleBooksExample> {
       scheme: 'https',
       host: 'www.googleapis.com',
       path: 'books/v1/volumes',
-      queryParameters: {'q': '$query'},
+      queryParameters: {'q': query},
     );
     print('uri=$uri'); // https://www.googleapis.com/books/v1/volumes?q=$query
     final http.Response response = await http.get(uri.toString());
@@ -88,11 +87,11 @@ class _RestApiGoogleBooksExampleState extends State<RestApiGoogleBooksExample> {
     setState(() => this._pending = true);
     try {
       this._books = await _getBooksList(query);
-      Scaffold.of(context).showSnackBar(
+      ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('Successfully found ${_books.length} books.')),
       );
     } catch (e) {
-      Scaffold.of(context).showSnackBar(
+      ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('Error: $e')),
       );
     }
@@ -116,18 +115,22 @@ class _MyBook {
       : CircleAvatar(child: Text(this.title[0]));
 
   _MyBook.fromJson(Map<String, dynamic> jsonMap)
-      : id = jsonMap['id'],
-        title = jsonMap['volumeInfo']['title'],
+      : id = jsonMap['id'] as String,
+        title = jsonMap['volumeInfo']['title'] as String,
         authors = (jsonMap['volumeInfo']['authors'] as List).join(', '),
-        description =
-            jsonMap['volumeInfo']['description'] ?? '<missing description>',
-        thumbnailUrl = jsonMap['volumeInfo']['imageLinks']['smallThumbnail'];
+        description = jsonMap['volumeInfo']['description'] as String ??
+            '<missing description>',
+        thumbnailUrl =
+            jsonMap['volumeInfo']['imageLinks']['smallThumbnail'] as String;
 
   static List<_MyBook> parseFromJsonStr(String jsonStr) {
     final json = jsonDecode(jsonStr);
-    final jsonList = json['items'] as List;
+    final jsonList = json['items'] as List<dynamic>;
     print('${jsonList.length} items in json');
-    return [for (final jsonMap in jsonList) _MyBook.fromJson(jsonMap)];
+    return [
+      for (final jsonMap in jsonList)
+        _MyBook.fromJson(jsonMap as Map<String, dynamic>)
+    ];
   }
 }
 
@@ -145,13 +148,12 @@ class _MyBookDetailsPage extends StatelessWidget {
       body: Padding(
         padding: const EdgeInsets.all(4),
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             Hero(
               tag: _book.id,
               child: _book.thumbnail,
             ),
-            Divider(),
+            const Divider(),
             Expanded(
               child: SingleChildScrollView(
                 child: Text(_book.description),

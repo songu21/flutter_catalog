@@ -6,92 +6,95 @@ class ButtonsExample extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final _showToast = () => Fluttertoast.showToast(
+    void _showToast() => Fluttertoast.showToast(
           msg: 'Button tapped',
           toastLength: Toast.LENGTH_SHORT,
         );
 
-    final _showSnack = () => Scaffold.of(context).showSnackBar(
-          SnackBar(
+    void _showSnack() => ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
             content: Text('Button tapped'),
             duration: Duration(milliseconds: 500),
           ),
         );
     return ListView(
-      padding: EdgeInsets.all(16.0),
+      padding: const EdgeInsets.all(16.0),
       children: <Widget>[
         Column(
           children: <Widget>[
-            Text('Raised buttons add dimension to mostly flat layouts. They '
+            const Text(
+                'Raised buttons add dimension to mostly flat layouts. They '
                 'emphasize functions on busy or wide spaces.'),
             ButtonBar(
               alignment: MainAxisAlignment.spaceEvenly,
               children: <Widget>[
-                RaisedButton(
-                  child: Text('RaisedButton'),
+                ElevatedButton(
                   onPressed: _showSnack,
+                  child: const Text('ElevatedButton'),
                 ),
-                RaisedButton(
-                  child: Text('disabled-RaisedButton'),
+                const ElevatedButton(
                   onPressed: null,
+                  child: Text('disabled-ElevatedButton'),
                 ),
               ],
             ),
           ],
         ),
-        Divider(),
+        const Divider(),
         Column(
           children: <Widget>[
-            Text('A flat button displays an ink splash on press '
+            const Text('A flat button displays an ink splash on press '
                 'but does not lift. Use flat buttons on toolbars, in dialogs '
                 'and inline with padding'),
             ButtonBar(
               alignment: MainAxisAlignment.spaceEvenly,
               children: <Widget>[
-                FlatButton(
-                  child: Text('FlatButton'),
+                TextButton(
                   onPressed: _showToast,
+                  child: const Text('TextButton'),
                 ),
-                FlatButton(
-                  child: Text('disabled-FlatButton'),
+                const TextButton(
                   onPressed: null,
+                  child: Text('disabled-TextButton'),
                 ),
               ],
             ),
           ],
         ),
-        Divider(),
+        const Divider(),
         Column(
           children: <Widget>[
-            Text('Outline buttons become opaque and elevate when pressed. They '
+            const Text(
+                'Outline buttons become opaque and elevate when pressed. They '
                 'are often paired with raised buttons to indicate an '
                 'alternative, secondary action.'),
             ButtonBar(
               alignment: MainAxisAlignment.spaceEvenly,
               children: <Widget>[
-                OutlineButton(
-                  child: Text('OutlineButton'),
+                OutlinedButton(
                   onPressed: _showToast,
+                  child: const Text('OutlineButton'),
                 ),
-                OutlineButton(
-                  child: Text('OutlineButton'),
+                const OutlinedButton(
                   onPressed: null,
+                  child: Text('OutlineButton'),
                 )
               ],
             ),
           ],
         ),
-        Divider(),
+        const Divider(),
         Column(
           children: <Widget>[
-            Text('Tooltips are short identifying messages that briefly appear '
+            const Text(
+                'Tooltips are short identifying messages that briefly appear '
                 'in response to a long press. Tooltip messages are also used '
                 'by services that make Flutter apps accessible, like screen '
                 'readers.'),
             Center(
               child: IconButton(
                 iconSize: 32.0,
-                icon: Icon(Icons.call),
+                icon: const Icon(Icons.call),
                 tooltip: 'Place a phone call',
                 onPressed: _showSnack,
               ),

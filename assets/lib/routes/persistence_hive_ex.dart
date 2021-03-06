@@ -1,12 +1,11 @@
 import 'package:english_words/english_words.dart' as english_words;
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:path/path.dart';
 import 'package:path_provider/path_provider.dart' as path_provider;
 
-import './data/todo_item.dart' show TodoItem, TodoItemAdapter;
+import 'data/todo_item.dart' show TodoItem, TodoItemAdapter;
 
 // We use built_value and hive_generator to make serializable data class.
 /* Content of the "./data/todo_item.dart" file:
@@ -57,17 +56,15 @@ class _HiveExampleState extends State<HiveExample> {
   // Initializes the hive DB, once done the hive operations are *synchronous*.
   Future<bool> _initDb() async {
     // Initialize hive.
-    if (!kIsWeb) {
-      final dir = await path_provider.getApplicationDocumentsDirectory();
-      final hiveFolder = join(dir.path, kHiveFolder);
-      Hive.init(hiveFolder);
-    }
+    final dir = await path_provider.getApplicationDocumentsDirectory();
+    final hiveFolder = join(dir.path, kHiveFolder);
+    Hive.init(hiveFolder);
     try {
       // Normally we should register this at the app startup (i.e. in main.dart),
       // putting it here might cuase the line to run twice and lead to errors
       // since this page can be opened twice.
       Hive.registerAdapter(TodoItemAdapter());
-    } on HiveError catch (e) {
+    } on Exception catch (e) {
       print(e);
     }
     // Open the hive box so that we can later call Hive.box(<name>) to use it.
@@ -96,7 +93,7 @@ class _HiveExampleState extends State<HiveExample> {
   // increment.
   Future<void> _addTodoItem(TodoItem todo) async {
     final box = Hive.box<TodoItem>(kHiveBoxName);
-    int key = await box.add(todo);
+    final int key = await box.add(todo);
     // Set the id field to the auto-incremented key.
     todo.id = key;
     await todo.save();
@@ -125,10 +122,11 @@ class _HiveExampleState extends State<HiveExample> {
     return FutureBuilder<bool>(
       future: this._initDbFuture,
       builder: (context, snapshot) {
-        if (!snapshot.hasData)
-          return Center(
+        if (!snapshot.hasData) {
+          return const Center(
             child: CircularProgressIndicator(),
           );
+        }
         return Scaffold(
           // WatchBoxBuilder by hive_flutter can save us from writing a
           // StreamBuilder ourselves.
@@ -162,14 +160,13 @@ class _HiveExampleState extends State<HiveExample> {
           onPressed: () => _toggleTodoItem(todo),
         ),
         trailing: IconButton(
-          icon: Icon(Icons.delete),
+          icon: const Icon(Icons.delete),
           onPressed: () => _deleteTodoItem(todo),
         ),
       );
 
   FloatingActionButton _buildFloatingActionButton() {
     return FloatingActionButton(
-      child: Icon(Icons.add),
       onPressed: () async {
         await _addTodoItem(
           TodoItem(
@@ -177,6 +174,7 @@ class _HiveExampleState extends State<HiveExample> {
           ),
         );
       },
+      child: const Icon(Icons.add),
     );
   }
 }

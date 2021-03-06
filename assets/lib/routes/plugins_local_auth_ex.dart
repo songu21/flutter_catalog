@@ -23,8 +23,8 @@ class _LocalAuthExampleState extends State<LocalAuthExample> {
   Future<bool> _auth() async {
     setState(() => this._authSuccess = false);
     if (await this._localAuth.canCheckBiometrics == false) {
-      Scaffold.of(context).showSnackBar(
-        SnackBar(
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
           content: Text('Your device is NOT capable of checking biometrics.\n'
               'This demo will not work on your device!\n'
               'You must have android 6.0+ and have fingerprint sensor.'),
@@ -37,12 +37,12 @@ class _LocalAuthExampleState extends State<LocalAuthExample> {
     try {
       final authSuccess = await this._localAuth.authenticateWithBiometrics(
           localizedReason: 'Auth in to see hidden image');
-      Scaffold.of(context).showSnackBar(
+      ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('authSuccess=$authSuccess')),
       );
       return authSuccess;
     } catch (e) {
-      Scaffold.of(context).showSnackBar(
+      ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text(e.toString())),
       );
       return false;
@@ -53,20 +53,21 @@ class _LocalAuthExampleState extends State<LocalAuthExample> {
   Widget build(BuildContext context) {
     return Column(
       children: <Widget>[
-        FlatButton.icon(
-          icon: Icon(Icons.fingerprint),
-          label: Text('Auth in to view hidden image'),
+        TextButton.icon(
+          icon: const Icon(Icons.fingerprint),
+          label: const Text('Auth in to view hidden image'),
           onPressed: () async {
             final authSuccess = await this._auth();
             setState(() => this._authSuccess = authSuccess);
           },
         ),
-        this._authSuccess
-            ? FadeInImage(
-                placeholder: MemoryImage(kTransparentImage),
-                image: AssetImage('res/images/animated_flutter_lgtm.gif'),
-              )
-            : Placeholder(),
+        if (this._authSuccess)
+          FadeInImage(
+            placeholder: MemoryImage(kTransparentImage),
+            image: const AssetImage('res/images/animated_flutter_lgtm.gif'),
+          )
+        else
+          const Placeholder(),
       ],
     );
   }

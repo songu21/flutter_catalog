@@ -32,7 +32,7 @@ class _AppBarSearchExampleState extends State<AppBarSearchExample> {
     return Scaffold(
       appBar: AppBar(
         automaticallyImplyLeading: false,
-        title: Text('English Words'),
+        title: const Text('English Words'),
         actions: <Widget>[
           IconButton(
             tooltip: 'Search',
@@ -43,7 +43,7 @@ class _AppBarSearchExampleState extends State<AppBarSearchExample> {
                 delegate: _delegate,
               );
               if (selected != null) {
-                Scaffold.of(context).showSnackBar(
+                ScaffoldMessenger.of(context).showSnackBar(
                   SnackBar(
                     content: Text('You have selected the word: $selected'),
                   ),
@@ -101,7 +101,7 @@ class _MySearchDelegate extends SearchDelegate<String> {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: <Widget>[
-            Text('You have selected the word:'),
+            const Text('You have selected the word:'),
             GestureDetector(
               onTap: () {
                 // Returns this.query as result to previous screen, c.f.
@@ -144,22 +144,23 @@ class _MySearchDelegate extends SearchDelegate<String> {
   @override
   List<Widget> buildActions(BuildContext context) {
     return <Widget>[
-      query.isEmpty
-          ? IconButton(
-              tooltip: 'Voice Search',
-              icon: const Icon(Icons.mic),
-              onPressed: () {
-                this.query = 'TODO: implement voice input';
-              },
-            )
-          : IconButton(
-              tooltip: 'Clear',
-              icon: const Icon(Icons.clear),
-              onPressed: () {
-                query = '';
-                showSuggestions(context);
-              },
-            )
+      if (query.isEmpty)
+        IconButton(
+          tooltip: 'Voice Search',
+          icon: const Icon(Icons.mic),
+          onPressed: () {
+            this.query = 'TODO: implement voice input';
+          },
+        )
+      else
+        IconButton(
+          tooltip: 'Clear',
+          icon: const Icon(Icons.clear),
+          onPressed: () {
+            query = '';
+            showSuggestions(context);
+          },
+        )
     ];
   }
 }
@@ -180,7 +181,7 @@ class _SuggestionList extends StatelessWidget {
       itemBuilder: (BuildContext context, int i) {
         final String suggestion = suggestions[i];
         return ListTile(
-          leading: query.isEmpty ? Icon(Icons.history) : Icon(null),
+          leading: query.isEmpty ? const Icon(Icons.history) : const Icon(null),
           // Highlight the substring that matched the query.
           title: RichText(
             text: TextSpan(

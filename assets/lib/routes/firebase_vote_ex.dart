@@ -24,10 +24,9 @@ class _FirebaseVoteExampleState extends State<FirebaseVoteExample> {
   @override
   void initState() {
     super.initState();
-    SharedPreferences.getInstance()
-      ..then((prefs) {
-        setState(() => this._preferences = prefs);
-      });
+    SharedPreferences.getInstance().then((prefs) {
+      setState(() => this._preferences = prefs);
+    });
   }
 
   @override
@@ -35,12 +34,14 @@ class _FirebaseVoteExampleState extends State<FirebaseVoteExample> {
     return Center(
       child: StreamBuilder<QuerySnapshot>(
         // In firestore console I added a "language_voting" collection.
-        stream: Firestore.instance.collection('language_voting').snapshots(),
+        stream: FirebaseFirestore.instance
+            .collection('language_voting')
+            .snapshots(),
         builder: (context, snapshot) {
           if (!snapshot.hasData) {
-            return LinearProgressIndicator();
+            return const LinearProgressIndicator();
           } else {
-            final List<_LangaugeVotingRecord> records = snapshot.data.documents
+            final List<_LangaugeVotingRecord> records = snapshot.data.docs
                 .map((snapshot) => _LangaugeVotingRecord.fromSnapshot(snapshot))
                 .toList()
                   ..sort((record1, record2) => record2.votes - record1.votes);
@@ -61,7 +62,7 @@ class _FirebaseVoteExampleState extends State<FirebaseVoteExample> {
   }
 
   // Mark a language as voted or not-voted.
-  Future<Null> _markVotedStatus(String lang, bool voted) async {
+  Future<void> _markVotedStatus(String lang, bool voted) async {
     this._preferences.setBool('$kVotedPreferenceKeyPrefx$lang', voted);
   }
 
@@ -97,7 +98,7 @@ class _FirebaseVoteExampleState extends State<FirebaseVoteExample> {
   }
 
   // Toggle the voted status of one record.
-  void _toggleVoted(_LangaugeVotingRecord record) async {
+  Future<void> _toggleVoted(_LangaugeVotingRecord record) async {
     try {
       // Check internet connection before doing firebase transactions.
       final result = await InternetAddress.lookup('firestore.googleapis.com');
@@ -105,9 +106,9 @@ class _FirebaseVoteExampleState extends State<FirebaseVoteExample> {
         throw 'Cannot access "firestore.googleapis.com"!';
       }
       final lang = record.language;
-      int deltaVotes = this._isVoted(lang) ? -1 : 1;
+      final int deltaVotes = this._isVoted(lang) ? -1 : 1;
       // Update votes via transactions are atomic: no race condition.
-      await Firestore.instance.runTransaction(
+      await FirebaseFirestore.instance.runTransaction(
         (transaction) async {
           try {
             final freshSnapshot =
@@ -115,18 +116,19 @@ class _FirebaseVoteExampleState extends State<FirebaseVoteExample> {
             // Get the most fresh record.
             final freshRecord =
                 _LangaugeVotingRecord.fromSnapshot(freshSnapshot);
-            await transaction.update(record.firestoreDocReference,
+            transaction.update(record.firestoreDocReference,
                 {'votes': freshRecord.votes + deltaVotes});
           } catch (e) {
-            throw e;
+            print(e);
+            rethrow;
           }
         },
-        timeout: Duration(seconds: 3),
+        timeout: const Duration(seconds: 3),
       );
       // Update local voted status only after transaction is successful.
       this._markVotedStatus(lang, !this._isVoted(lang));
     } catch (e) {
-      Scaffold.of(context).showSnackBar(
+      ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text('Error doing firebase transaction: $e'),
         ),
@@ -144,13 +146,14 @@ class _LangaugeVotingRecord {
 
   _LangaugeVotingRecord.fromMap(Map<String, dynamic> map,
       {@required this.firestoreDocReference})
-      : assert(map['language'] != null),
-        assert(map['votes'] != null),
-        language = map['language'],
-        votes = map['votes'];
+      : assert(map['language'] != null && map['language'] is String),
+        assert(map['votes'] != null && map['votes'] is int),
+        language = map['language'] as String,
+        votes = map['votes'] as int;
 
   _LangaugeVotingRecord.fromSnapshot(DocumentSnapshot snapshot)
-      : this.fromMap(snapshot.data, firestoreDocReference: snapshot.reference);
+      : this.fromMap(snapshot.data(),
+            firestoreDocReference: snapshot.reference);
 
   @override
   String toString() => "Record<$language:$votes>";

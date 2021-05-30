@@ -7,11 +7,11 @@ const RESOURCES = {
 "icons/Icon-192.png": "49ee36aa6e2a7152f0499b1a0b05b487",
 "icons/Icon-512.png": "d8251ff671208c7c426f1fafe86a60ee",
 "version.json": "e3dc76a299ac450f05da394a7def6321",
-"index.html": "8080ed5133ec7d0c4ebe7306af2ba447",
-"/": "8080ed5133ec7d0c4ebe7306af2ba447",
+"index.html": "db2af3d1bccbcb7ddac3ea8058a110ce",
+"/": "db2af3d1bccbcb7ddac3ea8058a110ce",
 "assets/FontManifest.json": "7b2a36307916a9721811788013e65289",
-"assets/fonts/MaterialIcons-Regular.otf": "1288c9e28052e028aba623321f7826ac",
-"assets/AssetManifest.json": "e63122112dc0a5676c694b326857c0f3",
+"assets/fonts/MaterialIcons-Regular.otf": "4e6447691c9509f7acdbf8a931a85ca1",
+"assets/AssetManifest.json": "f1ca5b7b34450fc819d72b8c38702388",
 "assets/lib/routes/widgets_stateful_widgets_ex.dart": "dfea559ee765abc64ee3f62553254ea2",
 "assets/lib/routes/animation_opacity_ex.dart": "6528b29c0db2692e480d9a89a04aca5a",
 "assets/lib/routes/animation_lottie_ex.dart": "1f1f7fc3ddcf47d2987338d438572231",
@@ -91,7 +91,7 @@ const RESOURCES = {
 "assets/lib/routes/plugins_markdown_ex.dart": "512c8a8fcc4a473ad7c61339fbb7b8f7",
 "assets/lib/routes/lists_list_tile_ex.dart": "b6a0b6d8612fcc982c1403094d7ec1bc",
 "assets/lib/routes/layouts_container_padding_center_ex.dart": "e0df341b4d2918bdc3e3353df7b6b05e",
-"assets/lib/routes/charts_fl_pie_chart_ex.dart": "a7e1dbaaa5cfdf140d12f6fb25f14404",
+"assets/lib/routes/charts_fl_pie_chart_ex.dart": "8e704cdce8ea86604a949c956ca57b6f",
 "assets/lib/routes/appbar_sliver_appbar_ex.dart": "5833fdb96c1ac6e6bbc088739fdd2a6a",
 "assets/lib/routes/widgets_dropdown_button_ex.dart": "9c44bad8ba26ca88da01cd95f4063447",
 "assets/lib/routes/lists_grid_list_ex.dart": "b926adef585f099167ba8dd4f7291f7c",
@@ -99,6 +99,7 @@ const RESOURCES = {
 "assets/lib/routes/widgets_textfield_ex.dart": "0ac8613bc964b3cf00df3ebfe08faaaa",
 "assets/lib/routes/state_bloc_ex.dart": "b986dfc5f734ad1c49ee8f972bc5ee9f",
 "assets/lib/routes/firebase_mlkit_ex.dart": "0f44b29e4a201d1dcfe7181ee13c9e16",
+"assets/lib/routes/animation_animated_text_kit_ex.dart": "cc831aa70679bf1d524e61c75311240c",
 "assets/lib/routes/nav_bottom_sheet_ex.dart": "77ff0086d91476367abde0d0cd2b6140",
 "assets/lib/routes/layouts_stack_ex.dart": "0f3cacc258dc8cb476755604d05d5400",
 "assets/lib/routes/plugins_shimmer_ex.dart": "50b0075d576dac210932052368b050b8",
@@ -108,7 +109,7 @@ const RESOURCES = {
 "assets/lib/routes/firebase_chatroom_ex.dart": "e6d539290b36fef40cc76e425ccf017e",
 "assets/lib/routes/multimedia_edge_detection_ex.dart": "24d05c8dcde8f0cb0401456b9441cce6",
 "assets/lib/routes/animation_animated_widget_ex.dart": "103ac5b6d95f9389c35b847a223807f1",
-"assets/NOTICES": "692720357263c3e97180f8eafec22656",
+"assets/NOTICES": "8b4641fa198c3cd2149077937d554f28",
 "assets/res/lottie/thumbs-up.json": "4b4cb2af6893316e53405eae64157cce",
 "assets/res/lottie/world.json": "8140dee112e141cd5c53c04e5727cb58",
 "assets/res/images/splash_screen.png": "d8251ff671208c7c426f1fafe86a60ee",
@@ -117,11 +118,11 @@ const RESOURCES = {
 "assets/res/images/launcher_icon.png": "d8697155bb89d87d8f5ce939cd3c0c6e",
 "assets/res/images/material_design_3.png": "c4c9411cb6b23dc218688d48f6bf514c",
 "assets/res/images/material_design_4.jpg": "43e36ec401db9d8a6c44bb3d327b99b3",
-"assets/packages/fluttertoast/assets/toastify.css": "8beb4c67569fb90146861e66d94163d7",
-"assets/packages/fluttertoast/assets/toastify.js": "8f5ac78dd0b9b5c9959ea1ade77f68ae",
+"assets/packages/fluttertoast/assets/toastify.css": "a85675050054f179444bc5ad70ffc635",
+"assets/packages/fluttertoast/assets/toastify.js": "e7006a0a033d834ef9414d48db3be6fc",
 "assets/packages/flutter_gallery_assets/animated_images/animated_flutter_stickers.webp": "b44800b701a3d0bb1285726003b1ae5c",
 "assets/packages/flutter_markdown/assets/logo.png": "67642a0b80f3d50277c44cde8f450e50",
-"main.dart.js": "0dc68caf08cb569eac27464506f7547e",
+"main.dart.js": "b4dd4b9876007e9fa17f2a10a6cf6e2b",
 "favicon.png": "1a4be3e7b38e95fafd9e5db14f8aa63b"
 };
 
@@ -140,7 +141,7 @@ self.addEventListener("install", (event) => {
   return event.waitUntil(
     caches.open(TEMP).then((cache) => {
       return cache.addAll(
-        CORE.map((value) => new Request(value + '?revision=' + RESOURCES[value], {'cache': 'reload'})));
+        CORE.map((value) => new Request(value, {'cache': 'reload'})));
     })
   );
 });

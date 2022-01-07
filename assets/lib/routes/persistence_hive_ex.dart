@@ -1,6 +1,5 @@
 import 'package:english_words/english_words.dart' as english_words;
 import 'package:flutter/material.dart';
-import 'package:hive/hive.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:path/path.dart';
 import 'package:path_provider/path_provider.dart' as path_provider;
@@ -77,7 +76,7 @@ class _HiveExampleState extends State<HiveExample> {
 
   @override
   void dispose() {
-    Hive.box(kHiveBoxName).compact();
+    // Hive.box(kHiveBoxName).compact();
     Hive.close();
     super.dispose();
   }
@@ -148,15 +147,17 @@ class _HiveExampleState extends State<HiveExample> {
         title: Text(
           todo.content,
           style: TextStyle(
-              fontStyle: todo.isDone ? FontStyle.italic : null,
-              color: todo.isDone ? Colors.grey : null,
-              decoration: todo.isDone ? TextDecoration.lineThrough : null),
+            fontStyle: todo.isDone ? FontStyle.italic : null,
+            color: todo.isDone ? Colors.grey : null,
+            decoration: todo.isDone ? TextDecoration.lineThrough : null,
+          ),
         ),
         subtitle: Text('id=${todo.id}\ncreated at ${todo.createdAt}'),
         isThreeLine: true,
         leading: IconButton(
           icon: Icon(
-              todo.isDone ? Icons.check_box : Icons.check_box_outline_blank),
+            todo.isDone ? Icons.check_box : Icons.check_box_outline_blank,
+          ),
           onPressed: () => _toggleTodoItem(todo),
         ),
         trailing: IconButton(
